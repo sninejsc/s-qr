@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="survey_title_inherit" inherit_id="web.frontend_layout">
+        <xpath expr="//head/title" position="replace">
+            <title>IBC</title>
+        </xpath>
+        <xpath expr="." position="inside">
+            <link rel="icon" href="/s_contact/static/description/faviconibc.png" type="image/png"/>
+        </xpath>
+    </template>
+
+    <template id="sne_survey_fill_header" inherit_id="survey.survey_fill_header">
+        <xpath expr="//div[hasclass('o_survey_nav')]/div[hasclass('container')]" position="replace">
+            <div class="container m-0 p-0">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <t t-if="survey.background_image">
+                            <img t-att-src="image_data_uri(survey.background_image)"
+                                 style="width: 1610px; height: 370px; object-fit: cover;"></img>
+                        </t>
+                        <t t-if="not survey.background_image">
+                            <img src="/s_contact/static/description/default.jpg"
+                                 style="width: 1610px; height: 370px; object-fit: cover;"></img>
+                        </t>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 t-if="answer.state == 'new' or survey.questions_layout != 'page_per_question'"
+                            t-esc="survey.title" class="o_survey_main_title pt-4"></h1>
+                    </div>
+                    <div class="o_survey_timer col-lg-2 pt-4">
+                        <h1 class="o_survey_timer_container timer text-end">
+                        </h1>
+                    </div>
+                </div>
+                <div class="col-lg-2 pt-4">
+                    <t t-set="active_lang" t-value="list(filter(lambda lg : lg[0] == lang, languages))[0]"/>
+                    <t t-set="language_selector_visible" t-value="len(languages) &gt; 1"/>
+                    <div t-attf-class="js_language_selector #{_div_classes} d-print-none"
+                         t-if="language_selector_visible">
+                        <button t-attf-class="btn btn-sm btn-outline-secondary border-0 dropdown-toggle #{_btn_class}"
+                                type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <span t-if="not no_text"
+                                  class="align-middle"
+                                  t-esc="active_lang[2].split('/').pop()"/>
+                        </button>
+                        <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
+                            <t t-foreach="languages" t-as="lg">
+                                <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang_code=lg[0])"
+                                   t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
+                                   t-att-data-url_code="lg[1]">
+                                    <span t-if="not no_text" t-esc="lg[2].split('/').pop()"/>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+    </template>
+
+    <template id="sne_survey_fill_form" inherit_id="web.frontend_layout" primary="True">
+        <xpath expr="//div[@id='wrapwrap']" position="replace">
+            <link rel="stylesheet" href="/s_contact/static/src/scss/custom_survey.scss"/>
+        </xpath>
+    </template>
+
+    <template id="sne_survey_fill_form_in_progress" inherit_id="survey.survey_fill_form_in_progress">
+        <xpath expr="//button[hasclass('btn')]" position="replace">
+
+            <button type="submit" value="finish" class="btn btn-primary disabled"
+                    style="background-color: #35b34a;height: 40px;width: 120px; ">SEND
+            </button>
+        </xpath>
+    </template>
+
+    <template id="sne_survey_fill_form_start" inherit_id="survey.survey_fill_form_start">
+        <xpath expr="//button[hasclass('btn')]" position="replace">
+            <button type="submit" value="start" class="btn btn-primary btn-lg"
+                    style="background-color: #35b34a;height: 40px;width: 120px;">
+                <t t-if="survey.certification">
+                    Start Certification
+                </t>
+                <t t-else="">
+                    Start Survey
+                </t>
+            </button>
+        </xpath>
+    </template>
+
+    <template id="sne_question_simple_choice" inherit_id="survey.question_simple_choice">
+        <xpath expr="//div[hasclass('o_survey_form_choice')]" position="replace">
+            <div class="row o_survey_form_choice"
+                 t-att-data-name="question.id"
+                 data-question-type="simple_choice_radio">
+                <t t-set="item_idx" t-value="0"/>
+                <div t-attf-class="col-lg-12 d-flex flex-wrap">
+                    <t t-set="has_correct_answer"
+                       t-value="scoring_display_correction and any(label.is_correct for label in question.suggested_answer_ids)"/>
+                    <t t-foreach='question.suggested_answer_ids' t-as='label'>
+                        <t t-set="item_idx" t-value="label_index"/>
+                        <t t-set="answer_selected"
+                           t-value="answer_line and answer_line.suggested_answer_id.id == label.id"/>
+                        <t t-set="is_correct" t-value="label.is_correct"/>
+
+                        <!--Used for print mode with corrections -->
+                        <t t-set="answer_class" t-if="not has_correct_answer" t-value="''"/>
+                        <t t-set="answer_class" t-elif="is_correct" t-value="'bg-success'"/>
+                        <t t-set="answer_class" t-elif="not is_correct" t-value="'bg-danger'"/>
+
+                        <t t-if="label.value == '_'">
+                            <label t-att-for="str(question.id) + '_' + str(label.id)" style="visibility: hidden;"
+                                   t-att-class="'o_survey_choice_btn me-2 mb-2 py-1 px-3 rounded %s %s' % (answer_class, 'o_survey_selected' if answer_selected else '')">
+                                <t t-call="survey.survey_selection_key">
+                                    <t t-set="selection_key_class"
+                                       t-value="'position-relative o_survey_radio_btn float-start d-flex'"/>
+                                </t>
+                                <span class="ms-2 text-break" t-field='label.value'/>
+                                <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio"
+                                       t-att-value='label.id'
+                                       t-attf-class="o_survey_form_choice_item invisible position-absolute #{'o_survey_form_choice_item_selected' if answer_selected else ''}"
+                                       t-att-name='question.id'
+                                       t-att-checked="'checked' if answer_selected else None"
+                                       t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
+                                <t t-if="has_correct_answer and answer_selected">
+                                    <!-- While displaying results: change icons to have a check mark for a right answer and a cross for a wrong one -->
+                                    <i t-if="is_correct"
+                                       class="float-end mt-1 position-relative d-inline fa fa-check-circle"/>
+                                    <i t-else="" class="float-end mt-1 position-relative d-inline fa fa-times-circle"/>
+                                </t>
+                                <t t-else="">
+                                    <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
+                                    <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
+                                </t>
+                                <t t-call="survey.question_suggested_value_image"/>
+                            </label>
+                        </t>
+                        <t t-else="">
+                            <label t-att-for="str(question.id) + '_' + str(label.id)"
+                                   t-att-class="'o_survey_choice_btn me-2 mb-2 py-1 px-3 rounded %s %s' % (answer_class, 'o_survey_selected' if answer_selected else '')">
+                                <t t-call="survey.survey_selection_key">
+                                    <t t-set="selection_key_class"
+                                       t-value="'position-relative o_survey_radio_btn float-start d-flex'"/>
+                                </t>
+                                <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio"
+                                       t-att-value='label.id'
+                                       t-attf-class="o_survey_form_choice_item invisible position-absolute #{'o_survey_form_choice_item_selected' if answer_selected else ''}"
+                                       t-att-name='question.id'
+                                       t-att-checked="'checked' if answer_selected else None"
+                                       t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
+                                <div class="d-flex align-items-center">
+                                    <t t-if="has_correct_answer and answer_selected">
+                                        <!-- While displaying results: change icons to have a check mark for a right answer and a cross for a wrong one -->
+                                        <i t-if="is_correct"
+                                           class="float-end mt-1 position-relative d-inline fa fa-check-circle"/>
+                                        <i t-else=""
+                                           class="float-end mt-1 position-relative d-inline fa fa-times-circle"/>
+                                    </t>
+                                    <t t-else="">
+                                        <div>
+                                            <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
+                                            <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
+                                        </div>
+                                    </t>
+                                    <p class="ms-2 text-break" t-field='label.value'/>
+                                </div>
+                                <t t-call="survey.question_suggested_value_image"/>
+                            </label>
+                        </t>
+
+                    </t>
+                </div>
+                <div t-if='question.comments_allowed and question.comment_count_as_answer'
+                     class="js_comments col-lg-12">
+                    <div class="d-flex flex-wrap">
+                        <label t-att-class="'o_survey_choice_btn form-label me-2 py-1 px-3 rounded %s' % ('o_survey_selected' if comment_line else '')">
+                            <t t-set="item_idx" t-value="item_idx + 1"/>
+                            <t t-call="survey.survey_selection_key">
+                                <t t-set="selection_key_class"
+                                   t-value="'position-relative o_survey_radio_btn float-start d-flex'"/>
+                            </t>
+                            <input type="radio"
+                                   class="o_survey_form_choice_item o_survey_js_form_other_comment invisible position-absolute"
+                                   value="-1"
+                                   t-att-name='question.id'
+                                   t-att-checked="comment_line and 'checked' or None"
+                                   t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
+                            <span class="ms-2" t-out="question.comments_message or default_comments_message"/>
+                            <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
+                            <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
+                        </label>
+                    </div>
+                    <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1  #{'d-none' if not comment_line else ''}">
+                        <textarea type="text"
+                                  class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
+                                  t-att-disabled="None if comment_line else 'disabled'">
+                            <t t-esc="comment_line.value_char_box if comment_line else ''"/>
+                        </textarea>
+                    </div>
+                </div>
+                <div t-if='question.comments_allowed and not question.comment_count_as_answer'
+                     class="col-lg-12 o_survey_comment_container mx-1 mt-3 ps-3 pe-4">
+                    <textarea type="text"
+                              class="form-control o_survey_comment o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
+                              t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''">
+                        <t t-esc="comment_line.value_char_box if comment_line else ''"/>
+                    </textarea>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="sne_question_multiple_choice" inherit_id="survey.question_multiple_choice">
+        <xpath expr="//div[hasclass('o_survey_question_multiple_choice')]" position="replace">
+            <div class="row o_survey_form_choice o_survey_question_multiple_choice"
+                 t-att-data-name="question.id"
+                 t-att-data-question-type="question.question_type">
+                <t t-set="item_idx" t-value="0"/>
+                <div class="d-flex flex-wrap col-lg-12">
+                    <t t-set="has_correct_answer"
+                       t-value="scoring_display_correction and any(label.is_correct for label in question.suggested_answer_ids)"/>
+                    <t t-foreach='question.suggested_answer_ids' t-as='label'>
+                        <t t-set="item_idx" t-value="label_index"/>
+                        <t t-set="answer_line"
+                           t-value="answer_lines.filtered(lambda line: line.suggested_answer_id == label)"/>
+                        <t t-set="answer_selected"
+                           t-value="answer_line and answer_line.suggested_answer_id.id == label.id"/>
+                        <t t-set="is_correct" t-value="label.is_correct"/>
+
+                        <!--Used for print mode with corrections -->
+                        <t t-set="answer_class" t-if="not has_correct_answer" t-value="''"/>
+                        <t t-set="answer_class" t-elif="is_correct" t-value="'bg-success'"/>
+                        <t t-set="answer_class" t-elif="not is_correct" t-value="'bg-danger'"/>
+                        <t t-if="label.value == '_'">
+                            <label style="visibility: hidden;"
+                                   t-att-class="'o_survey_choice_btn form-label me-2 py-1 px-3 rounded %s %s' % (answer_class, 'o_survey_selected' if answer_line else '')">
+                                <t t-call="survey.survey_selection_key">
+                                    <t t-set="selection_key_class" t-value="'position-relative float-start d-flex'"/>
+                                </t>
+                                <input type="checkbox" t-att-value='label.id'
+                                       class="o_survey_form_choice_item invisible position-absolute"
+                                       t-att-name="question.id"
+                                       t-att-checked="'checked' if answer_line else None"
+                                       t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
+                                <t t-if="has_correct_answer and answer_selected">
+                                    <!-- While displaying results: change icons to have a check mark for a right answer and a cross for a wrong one -->
+                                    <i t-if="is_correct"
+                                       class="float-end mt-1 position-relative d-inline fa fa-check-circle"/>
+                                    <i t-else="" class="float-end mt-1 position-relative d-inline fa fa-times-circle"/>
+                                </t>
+                                <t t-else="">
+                                    <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
+                                    <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
+                                </t>
+                                <span class="ms-2 text-break" t-field='label.value'/>
+                                <t t-call="survey.question_suggested_value_image"/>
+                            </label>
+                        </t>
+                        <t t-else="">
+                            <label t-att-class="'o_survey_choice_btn form-label me-2 py-1 px-3 rounded %s %s' % (answer_class, 'o_survey_selected' if answer_line else '')">
+                                <t t-call="survey.survey_selection_key">
+                                    <t t-set="selection_key_class" t-value="'position-relative float-start d-flex'"/>
+                                </t>
+                                <input type="checkbox" t-att-value='label.id'
+                                       class="o_survey_form_choice_item invisible position-absolute"
+                                       t-att-name="question.id"
+                                       t-att-checked="'checked' if answer_line else None"
+                                       t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
+                                <div class="d-flex align-items-center">
+                                    <t t-if="has_correct_answer and answer_selected">
+                                        <!-- While displaying results: change icons to have a check mark for a right answer and a cross for a wrong one -->
+                                        <i t-if="is_correct"
+                                           class="float-end mt-1 position-relative d-inline fa fa-check-circle"/>
+                                        <i t-else=""
+                                           class="float-end mt-1 position-relative d-inline fa fa-times-circle"/>
+                                    </t>
+                                    <t t-else="">
+                                        <div>
+                                            <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
+                                            <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
+                                        </div>
+                                    </t>
+                                    <p class="ms-2 text-break" t-field='label.value'/>
+                                </div>
+                                <t t-call="survey.question_suggested_value_image"/>
+                            </label>
+                        </t>
+                    </t>
+                </div>
+                <div t-if='question.comments_allowed and question.comment_count_as_answer'
+                     class="js_ck_comments col-lg-12">
+                    <div class="d-flex flex-wrap">
+                        <label t-att-class="'o_survey_choice_btn form-label me-2 py-1 px-3 rounded %s' % ('o_survey_selected' if comment_line else '')">
+                            <t t-set="item_idx" t-value="item_idx + 1"/>
+                            <t t-call="survey.survey_selection_key">
+                                <t t-set="selection_key_class" t-value="'position-relative float-start d-flex'"/>
+                            </t>
+                            <input type="checkbox"
+                                   class="o_survey_form_choice_item o_survey_js_form_other_comment invisible position-absolute"
+                                   value="-1"
+                                   t-att-name="question.id"
+                                   t-att-checked="comment_line and 'checked' or None"
+                                   t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
+                            <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
+                            <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
+                            <span class="ms-2" t-out="question.comments_message or default_comments_message"/>
+                        </label>
+                    </div>
+                    <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1 #{'d-none' if not comment_line else ''}">
+                        <textarea type="text"
+                                  class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
+                                  t-att-disabled="None if comment_line else 'disabled'">
+                            <t t-esc="comment_line.value_char_box if comment_line else ''"/>
+                        </textarea>
+                    </div>
+                </div>
+                <div t-if='question.comments_allowed and not question.comment_count_as_answer'
+                     class="col-lg-12 o_survey_comment_container mx-1 mt-3 py-0 ps-3 pe-4">
+                    <textarea type="text"
+                              class="form-control o_survey_comment o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
+                              t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''">
+                        <t t-esc="comment_line.value_char_box if comment_line else ''"/>
+                    </textarea>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="sne_survey_fill_form_done" inherit_id="survey.survey_fill_form_done">
+        <xpath expr="//div[hasclass('o_survey_finished')]/h1" position="before">
+            <div>
+                <p style="font-size: 20px;">
+                    Please take a screenshot of the QR code to check in to the event!
+                </p>
+                <t t-if="answer.contact_id.qr_code_img">
+                    <img t-att-src="image_data_uri(answer.contact_id.qr_code_img)" alt="QR Code"
+                         class="img-thumbnail img-responsive"/>
+                </t>
+            </div>
+        </xpath>
+    </template>
+</odoo>

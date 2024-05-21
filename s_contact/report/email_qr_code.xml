@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="email_template_qr_code" model="mail.template">
+            <field name="name">QR-CODE: Sending</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ (object.email_formatted) }}</field>
+            <!--            <field name="partner_to">{{ object.partner_id.id }}</field>-->
+            <field name="subject">Xác nhận Đăng Ký Tham Quan Thành Công</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0"
+                       style="padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" width="590" cellpadding="0"
+                                   style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;"
+                                   summary="o_mail_notification">
+                                <tbody>
+                                    <tr>
+                                        <td style="min-width: 590px;">
+                                            <div class="o_layout oe_unremovable oe_unmovable bg-200 o_default_theme"
+                                                 data-name="Mailing">
+                                                <style id="design-element">.o_mail_wrapper h2 {
+                                                    font-weight:bolder;
+                                                    }
+                                                    .o_mail_wrapper p {
+                                                    color:rgb(108, 117, 125);
+                                                    font-size:16.25px;
+                                                    }
+                                                    .o_mail_wrapper p > * {
+                                                    color:rgb(108, 117, 125);
+                                                    font-size:16.25px;
+                                                    }
+                                                    .o_mail_wrapper li {
+                                                    color:rgb(108, 117, 125);
+                                                    font-size:16.25px;
+                                                    }
+                                                    .o_mail_wrapper li > * {
+                                                    color:rgb(108, 117, 125);
+                                                    font-size:16.25px;
+                                                    }
+                                                    .o_mail_wrapper hr {
+                                                    width:100%;
+                                                    border-top-color:rgb(206, 212, 218) !important;
+                                                    }
+                                                </style>
+                                                <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
+                                                    <div class="row">
+                                                        <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable">
+                                                            <img src="https://ci3.googleusercontent.com/proxy/RBqaRiT8JtRSwzcTc8YJl2sNbUgb0qJyKCH_7euDshYxhfoAx-VRhNh3sIRRQjq3_6Lr76QFqzRAk8GsZRrPpvrk6NxvGv-aSHGtIiRA4n79HPaXD3u5esJyTjO0H6SHME1gHcon3vEoSJNjFZAAhhf9Iu7X2_kFG03dzyEXjhhilhIm_LZfmsBPtYn6wDvlSXoVlQXI1mCdQg=s0-d-e1-ft#http://checkin.cleanfact.vn/web/image/144-07e63ecc/%E1%BA%A3nh%20b%C3%ACa%20form.jpg?access_token=05e07089-a60f-4d72-9dd0-d2d921a55e0f"
+                                                                 style="display:inline-block;box-sizing:border-box;vertical-align:middle;height:auto;max-width:100%;width:720px"
+                                                                 width="720" class="CToWUd a6T" data-bit="iit"
+                                                                 tabindex="0"/>
+                                                            <div class="s_text_block o_mail_snippet_general pt40 pb16"
+                                                                 style="padding-left: 15px; padding-right: 15px;"
+                                                                 data-name="Văn bản">
+                                                                <div class="container s_allow_columns">
+
+                                                                    <p>
+                                                                        <span style="font-size: 14px;">Kính gửi :</span>
+                                                                        <t t-out="object.name"></t>
+                                                                        <span style="font-size: 14px;">,</span>
+                                                                    </p>
+                                                                    <p>
+                                                                        <span style="font-size: 14px;">
+                                                                            Chúc mừng bạn đã đăng ký thành công tham
+                                                                            quan Triển lãm
+                                                                            CLEANFACT &amp;
+                                                                            RESAT EXPO 2023!
+                                                                        </span>
+                                                                        <br/>
+                                                                        <span style="font-size: 14px;">Dưới đây là thông
+                                                                            tin chi tiết
+                                                                            của đăng ký
+                                                                            của bạn:
+                                                                        </span>
+                                                                    </p>
+                                                                    <p>
+                                                                        <span style="font-size: 14px;">Mã Đăng Ký:
+                                                                        </span>
+                                                                        <t t-out="object.qr_code"></t>
+                                                                        <span style="font-size: 14px;">,</span>
+                                                                    </p>
+                                                                    <p>
+                                                                        <span style="font-size: 14px;">QR Code:</span>
+                                                                        <br/>
+                                                                        <img t-att-src="'https://api.qrserver.com/v1/create-qr-code/?data=' + object.qr_code"
+                                                                             loading=""/>
+                                                                    </p>
+                                                                    <p>
+                                                                        <span style="font-size: 14px;">Xin vui lòng giữ
+                                                                            bảo mật mã đăng
+                                                                            ký thành
+                                                                            công này và xuất trình mã tại bộ phận
+                                                                            Check-in khi bạn đến
+                                                                            tham quan.
+                                                                            Điều này sẽ giúp quá trình Check-in tại sự
+                                                                            kiện của bạn diễn
+                                                                            ra nhanh
+                                                                            chóng và thuận lợi.
+                                                                        </span>
+                                                                        <br/>
+                                                                        <span style="font-size: 14px;">Để đảm bảo bạn có
+                                                                            thông tin đầy
+                                                                            đủ về Triển
+                                                                            lãm và các sự kiện, hoạt động diễn ra tại
+                                                                            Triển lãm, hãy
+                                                                            tham khảo Bản
+                                                                            Thông Tin Chi Tiết Chương Trình được đính
+                                                                            kèm
+                                                                            <a
+                                                                                    href="https://drive.google.com/file/d/1k4n-KrUnFd9ZiN1kz28gdb5fZ_S9jpd-/view?usp=share_link"
+                                                                                    target="_blank">dưới đây
+                                                                            </a>
+                                                                        </span>
+                                                                        <br/>
+                                                                        <span style="font-size: 14px;">Trân trọng cám ơn
+                                                                            bạn đã đồng
+                                                                            hành cùng chúng
+                                                                            tôi và hy vọng sẽ gặp bạn tại Triển lãm
+                                                                            CLEANFACT &amp;
+                                                                            RESAT EXPO 2023!
+                                                                        </span>
+                                                                        <br/>
+                                                                        <span style="font-size: 14px;">Trân trọng!
+                                                                        </span>
+                                                                    </p>
+                                                                    <p>
+                                                                        <br/>
+                                                                    </p>
+
+                                                                    <p>
+                                                                        <span style="font-size: 14px;">Dear:</span>
+                                                                        <t t-out="object.name"></t>
+                                                                        <span style="font-size: 14px;">,</span>
+                                                                        <br/>
+                                                                        <span style="font-size: 14px;">Congratulations
+                                                                            on successfully
+                                                                            registering
+                                                                            for the CLEANFACT &amp; RESAT EXPO 2023
+                                                                            exhibition!
+                                                                        </span>
+                                                                        <br/>
+                                                                        <span style="font-size: 14px;">Here are the
+                                                                            details of your
+                                                                            registration:
+                                                                        </span>
+                                                                        <br/>
+                                                                    </p>
+                                                                    <p>
+                                                                        <span style="font-size: 14px;">Registration
+                                                                            Code:
+                                                                        </span>
+                                                                        <t t-out="object.qr_code"></t>
+                                                                        <span style="font-size: 14px;">,</span>
+                                                                    </p>
+                                                                    <p>
+                                                                        <span style="font-size: 14px;">QR Code:</span>
+                                                                        <br/>
+                                                                        <img t-att-src="'https://api.qrserver.com/v1/create-qr-code/?data=' + object.qr_code"
+                                                                             loading=""/>
+                                                                    </p>
+                                                                    <p>
+                                                                        <span style="font-size: 14px;">Please keep this
+                                                                            registration
+                                                                            code secure and
+                                                                            present it at the Check-in counter when you
+                                                                            arrive to ensure
+                                                                            a quick and
+                                                                            smooth check-in process.
+                                                                        </span>
+                                                                        <br/>
+                                                                        <span style="font-size: 14px;">To familiarize
+                                                                            yourself with
+                                                                            information
+                                                                            about the exhibition and the events and
+                                                                            activities taking
+                                                                            place, please
+                                                                            refer to the Detailed Program Information
+                                                                            attached:
+                                                                            <a
+                                                                                    href="https://drive.google.com/file/d/1pzkeaiQ0UoSe8NXdc9fho3F4mLvJL_8a/view?usp=share_link"
+                                                                                    target="_blank">below
+                                                                            </a>
+                                                                        </span>
+                                                                        <br/>
+                                                                        <span style="font-size: 14px;">Thank you for
+                                                                            accompanying us,
+                                                                            and we look
+                                                                            forward to meeting you at the CLEANFACT
+                                                                            &amp; RESAT EXPO
+                                                                            2023
+                                                                            exhibition!
+                                                                        </span>
+                                                                        <br/>
+                                                                        <span style="font-size: 14px;">Best regards.
+                                                                        </span>
+                                                                        <br/>
+                                                                    </p>
+                                                                    <p>
+                                                                        <br/>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="report_name">QR-CODE</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

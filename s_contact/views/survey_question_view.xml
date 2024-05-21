@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sne_survey_question_form" model="ir.ui.view">
+            <field name="name">sne.survey.form</field>
+            <field name="model">survey.question</field>
+            <field name="inherit_id" ref="survey.survey_question_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='options']//group" position="before">
+                    <group>
+                        <group string="Write Fields">
+                            <field name="fields_id"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

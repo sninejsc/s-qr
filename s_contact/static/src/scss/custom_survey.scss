@@ -1,0 +1,85 @@
+.o_survey_choice_btn {
+        transition: background-color 0.3s ease;
+        flex: 1 0 425px !important;
+        color: $primary;
+
+        span {
+            line-height: 25px;
+        }
+        i {
+            top: 0px;
+            font-size: large;
+            &.fa-check-circle {
+                display: none;
+            }
+        }
+
+        &.o_survey_selected i {
+            display: none;
+            &.fa-check-circle {
+                display: inline;
+            }
+        }
+
+    @media (max-width: 900px) {
+      flex: 1 0 100% !important;
+    }
+}
+
+.o_survey_question_multiple_choice .d-flex p,
+.o_survey_choice_btn .d-flex p{
+  margin-bottom: 0;
+}
+
+.float-end {
+  float: left !important;
+}
+
+.o_survey_form .o_survey_choice_btn, .o_survey_print .o_survey_choice_btn, .o_survey_session_manage .o_survey_choice_btn, .o_survey_quick_access .o_survey_choice_btn {
+    color: #000000 !important;
+}
+
+.o_survey_form .o_survey_choice_btn {
+    cursor: pointer;
+    background-color: #fff !important;
+    box-shadow: #dee2e6 0px 0px 0px 1px !important;
+}
+
+.o_survey_brand_message {
+    float: right !important;
+}
+
+.o_survey_nav {
+    padding-top: 0px !important;
+}
+
+.o_survey_main_title {
+    padding-top: 5rem !important;
+}
+
+.o_survey_form .o_survey_question_text_box {
+    border-bottom: 1px solid #35b34a;
+}
+
+.mb-4 {
+    margin-bottom: 0.5rem !important;
+    margin-top: 1.5rem !important;
+}
+
+img, svg {
+    vertical-align: middle;
+    width: 100% !important;
+}
+
+.img-thumbnail {
+    max-width: 40%;
+}
+
+.text-break {
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+}
+
+#wrapwrap {
+  background-size: 0 0;
+}

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record model="ir.ui.view" id="view_qr_booth_list">
+        <field name="name">qr.booth.list</field>
+        <field name="model">qr.booth</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="type"/>
+                <field name="activate" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Form View -->
+    <record model="ir.ui.view" id="view_qr_booth_form">
+        <field name="name">qr.booth.form</field>
+        <field name="model">qr.booth</field>
+        <field name="arch" type="xml">
+            <form string="Qr Booth Form">
+                <sheet>
+                    <widget name="web_ribbon" title="Event Counter"
+                            attrs="{'invisible': [('type', '=', 'check_in_counter')]}"/>
+                    <widget name="web_ribbon" title="Check-in Counter" bg_color="bg-danger"
+                            attrs="{'invisible': [('type', '=', 'event_counter')]}"/>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="name" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="user_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="activate" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="type" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="participant" string="Participant" autofocus="autofocus">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h1>
+                                        <field class="text-break" name="domain_check" default_focus="1"
+                                               placeholder="e.g. QR code"/>
+                                    </h1>
+                                </div>
+                                <div class="col-lg-6">
+                                    <button name="action_check_in_out" string="Check In/Out" type="object"
+                                            attrs="{'invisible': [('type', '=', 'event_counter')]}"
+                                            class="oe_highlight" data-hotkey="i"/>
+                                </div>
+                            </div>
+                            <br/>
+                            <field name="booth_line_ids" nolabel="1" readonly="1">
+                                <tree editable="top" default_order="id desc"
+                                      decoration-danger="s_type == 'A'"
+                                      decoration-muted="s_type == 'B'"
+                                      limit="10">
+                                    <field name="partner_id" readonly="1"/>
+                                    <field name="s_type" readonly="1"/>
+                                    <field name="check_in" optional="show" readonly="1"/>
+                                    <field name="check_out" optional="hide" readonly="1"/>
+                                    <button name="action_print_qr" string="Print QR" type="object"
+                                            class="oe_highlight" data-hotkey="p"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="note" string="Note">
+                            <form>
+                                <field name="note" widget="text" class="oe_wide"
+                                       attrs="{'readonly': [('id', '!=', False)]}"
+                                       placeholder="Ghi chú thông tin Quầy"/>
+                            </form>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!-- Search View -->
+    <record id="qr_booth_search_view" model="ir.ui.view">
+        <field name="name">qr_booth.search</field>
+        <field name="model">qr.booth</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <search string="Qr Booth Search">
+                <field name="code"/>
+                <field name="name"/>
+                <group expand='0' string='Group by...'>
+                    <filter string='Code' name="code_group" context="{'group_by': 'code'}"/>
+                    <filter string='Name' name="name_group" context="{'group_by': 'name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- Kanban View -->
+    <record model="ir.ui.view" id="view_qr_booth_kanban">
+        <field name="name">qr.booth.kanban</field>
+        <field name="model">qr.booth</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_title">
+                                <field name="code" style="font-weight:bold;"/>
+                            </div>
+                            <field name="type"/>
+                            <div class="oe_kanban_footer">
+                                <field name="name" style="font-style: italic;"/>
+                                <div class="o_kanban_footer_left">
+                                    Total Partners:
+                                    <field name="total_partner_count"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!-- Action for List View -->
+    <record id="action_qr_booth" model="ir.actions.act_window">
+        <field name="name">Booth List</field>
+        <field name="res_model">qr.booth</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="qr_booth_search_view"/>
+        <field name="view_id" ref="view_qr_booth_kanban"/>
+        <field name="search_view_id" ref="qr_booth_search_view"/>
+    </record>
+</odoo>

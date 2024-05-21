@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sne_action_contacts" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="context">{'create': False}</field>
+        <field name="domain">['|', ('s_type','=','A'), ('s_type','=','B')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Contact in your address book
+            </p>
+            <p>
+                Odoo helps you track all activities related to your contacts.
+            </p>
+        </field>
+    </record>
+
+
+    <record id="view_sne_partner_form_inherit" model="ir.ui.view">
+        <field name="name">sne.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='image_1920']" position="before">
+                <field name="qr_code_img" widget="image" class="oe_avatar"/>
+            </xpath>
+            <xpath expr="//field[@name='website']" position="before">
+                <field name="business_nature"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="department"/>
+                <field name="seminars"/>
+                <field name="question"/>
+                <field name="other"/>
+                <field name="s_type"/>
+            </xpath>
+            <xpath expr="//page[@name='contact_addresses']" position="attributes">
+                <attribute name="autofocus"/>
+            </xpath>
+            <xpath expr="//page[@name='contact_addresses']" position="before">
+                <page name="booth_note" string="Booth Notes" autofocus="autofocus">
+                    <form>
+                        <field name="booth_ids" readonly="1">
+                            <tree>
+                                <field name="code"/>
+                                <field name="name"/>
+                                <field name="user_id"/>
+                            </tree>
+                        </field>
+                    </form>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sne_action_contacts_view_tree" model="ir.ui.view">
+        <field name="name">sne.partner.tree.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <tree>
+                <header>
+                    <button name="button_gen_qr" type="object" string="QR" class="oe_highlight"
+                            groups="base.group_system"/>
+                </header>
+                <field name="seminars" optional="show"/>
+                <field name="question" optional="show"/>
+                <field name="business_nature" optional="show"/>
+                <field name="department" optional="show"/>
+                <field name="user_id" optional="hide"/>
+                <field name="activity_ids" optional="hide"/>
+                <field name="country_id" optional="hide"/>
+                <field name="city" optional="hide"/>
+                <button name="action_send_mail" type="object" string="Send" class="oe_highlight"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sne_action_contacts_view_kanban" model="ir.ui.view">
+        <field name="name">sne.partner.kanban.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_kanban_details')]" position="after">
+                <div>
+                    <field name="qr_code_img" widget="image" class="o_kanban_image" position="attributes">
+                        <attribute name="options">{'size':[20,20]}</attribute>
+                    </field>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_image_fill_left')]" position="replace"/>
+            <xpath expr="//div[hasclass('o_kanban_record_bottom')]" position="replace">
+                <div class="o_kanban_record_bottom">
+                    <div class="oe_kanban_bottom_left" invisible="1"/>
+                    <div class="oe_kanban_bottom_right" invisible="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

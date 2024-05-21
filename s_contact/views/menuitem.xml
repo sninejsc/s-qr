@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_sne_event"
+              name="Event"
+              web_icon="s_contact,static/description/icon.png"
+              sequence="35">
+
+        <menuitem id="menu_sne_contacts"
+                  name="Contacts"
+                  action="sne_action_contacts"
+                  sequence="0"/>
+
+        <menuitem id="menu_qr_booth_list"
+                  name="Booth"
+                  action="action_qr_booth"
+                  sequence="10"/>
+
+        <menuitem name="Surveys"
+                  id="menu_sne_survey"
+                  action="survey.action_survey_form"
+                  sequence="15"/>
+
+        <menuitem name="Setting"
+                  id="menu_sne_setting"
+                  groups="s_contact.group_admin"
+                  sequence="25">
+            <menuitem id="menu_import_contact"
+                      name="Import Contact"
+                      action="import_contact_action"
+                      sequence="20"/>
+            <menuitem id="menu_qr_booth_line"
+                      name="Booth Line"
+                      action="action_qr_booth_line"
+                      sequence="0"/>
+        </menuitem>
+    </menuitem>
+</odoo>

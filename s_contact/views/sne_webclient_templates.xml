@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sne_brand_promotion_message" inherit_id="web.brand_promotion_message">
+        <xpath expr="//a[hasclass('badge')]" position="replace">
+            <a target="_blank"
+               t-attf-href="http://snine.vn/"
+               class="badge text-bg-light">
+                <img alt="Snine"
+                     src="/s_contact/static/description/logoS9.png"
+                     style="height: 25px !important;width: 25px !important;"/>
+            </a>
+        </xpath>
+    </template>
+</odoo>

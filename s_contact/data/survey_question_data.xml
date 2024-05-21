@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="survey_clearn_fact" model="survey.survey">
+            <field name="title">VISITOR REGISTRATION</field>
+        </record>
+
+        <record id="question_title" model="survey.question">
+            <field name="survey_id" ref="survey_clearn_fact"/>
+            <field name="title">Danh xưng</field>
+        </record>
+
+        <record id="question_fullname" model="survey.question">
+            <field name="survey_id" ref="survey_clearn_fact"/>
+            <field name="title">Họ và tên</field>
+        </record>
+
+        <record id="question_email" model="survey.question">
+            <field name="survey_id" ref="survey_clearn_fact"/>
+            <field name="title">Email</field>
+        </record>
+
+        <record id="question_phone_number" model="survey.question">
+            <field name="survey_id" ref="survey_clearn_fact"/>
+            <field name="title">Số điện thoại</field>
+        </record>
+
+        <record id="question_designation" model="survey.question">
+            <field name="survey_id" ref="survey_clearn_fact"/>
+            <field name="title">Chức danh</field>
+        </record>
+
+        <record id="question_company_name" model="survey.question">
+            <field name="survey_id" ref="survey_clearn_fact"/>
+            <field name="title">Tên công ty</field>
+        </record>
+
+        <record id="question_business_nature" model="survey.question">
+            <field name="survey_id" ref="survey_clearn_fact"/>
+            <field name="title">Lĩnh vực kinh doanh</field>
+        </record>
+
+        <record id="question_you_know" model="survey.question">
+            <field name="survey_id" ref="survey_clearn_fact"/>
+            <field name="title">Bạn biết đến triển lãm thông qua kênh thông tin nào ?</field>
+        </record>
+
+        <record id="question_seminars" model="survey.question">
+            <field name="survey_id" ref="survey_clearn_fact"/>
+            <field name="title">Bạn muốn tham gia chương trình nào dưới đây ?</field>
+        </record>
+
+        <record id="question_question" model="survey.question">
+            <field name="survey_id" ref="survey_clearn_fact"/>
+            <field name="title">Bạn có câu hỏi nào cho ban tổ chức không ?</field>
+        </record>
+    </data>
+</odoo>
